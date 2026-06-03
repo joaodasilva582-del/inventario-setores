@@ -599,30 +599,26 @@
         }
 
         function renderizarTabelaDash() {
-            const fSetor = document.getElementById('filtro-setor').value;
-            const fBusca = document.getElementById('busca-dash').value.toLowerCase().trim();
-            const tbody = document.getElementById('corpo-dash');
-            tbody.innerHTML = "";
+    const fSetor = document.getElementById('filtro-setor').value;
+    const fBusca = document.getElementById('busca-dash').value.toLowerCase().trim();
+    const tbody = document.getElementById('corpo-dash');
+    tbody.innerHTML = "";
 
-            let totalItens = 0;
-            let linesFiltradas = 0;
+    let totalItens = 0;
+    let linesFiltradas = 0;
 
-            dadosGlobaisDash.forEach(row => {
-                let dataFormata = new Date(row[0]).toLocaleString();
-                let setor = row[1] || "";
-                let resp = row[2] || "";
-                let codigo = row[3] || "";
-                let desc = row[4] || "";
-                let lote = row[5] || "";
-                let um = row[6] || "";
-                let qtd = parseFloat(row[7]) || 0;
+    dadosGlobaisDash.forEach(row => {
+        let dataFormata = new Date(row[0]).toLocaleString();
+        let setor = (row[1] || "").toUpperCase().trim();
+        let resp = (row[2] || "").toLowerCase().trim();
+        let codigo = (row[3] || "").toString().toLowerCase().trim();
+        let desc = (row[4] || "").toLowerCase().trim();
+        let lote = row[5] || "";
+        let um = row[6] || "";
+        let qtd = parseFloat(row[7]) || 0;
 
-                let bateSetor = (fSetor === "TODOS" || setor === fSetor);
-                let bateBusca = (fBusca === "" || resp.toLowerCase().includes(fBusca) || codigo.toLowerCase().includes(fBusca));
-
-                if (bateSetor && bateBusca) {
-                    linesFiltradas++;
-                    totalItens += qtd;
+        let bateSetor = (fSetor === "TODOS" || setor === fSetor.toUpperCase().trim());
+        let bateBusca = (fBusca === "" || resp.includes(fBusca) || codigo.includes(fBusca) || desc.includes(fBusca));
 
                     tbody.innerHTML += `
                         <tr>
