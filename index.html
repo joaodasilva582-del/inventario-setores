@@ -323,7 +323,7 @@
             {id:'0070008', um:'UN', ds:'PALLET 1200 X 1000 FUMEGADO CE'},
             {id:'0070015', um:'UN', ds:'PALLET PADRAO PBR 1200 X 1000 CE'},
             {id:'0040076', um:'UN', ds:'DISCO POLEXAN R 87 MX25 87,00 X 1,50'},
-            {id:'0040077', um:'UN', ds:'DISCO DE POLEXAN P/ TAMPA R 63'},
+            {id:'0040077', um:'UN', ds:'DISCO DE POLEXAN P/ TAMPA R 63'}
         ];
 
         const resinasDinamoFixas = [
@@ -599,34 +599,38 @@
         }
 
         function renderizarTabelaDash() {
-    const fSetor = document.getElementById('filtro-setor').value;
-    const fBusca = document.getElementById('busca-dash').value.toLowerCase().trim();
-    const tbody = document.getElementById('corpo-dash');
-    tbody.innerHTML = "";
+            const fSetor = document.getElementById('filtro-setor').value.toUpperCase().trim();
+            const fBusca = document.getElementById('busca-dash').value.toLowerCase().trim();
+            const tbody = document.getElementById('corpo-dash');
+            tbody.innerHTML = "";
 
-    let totalItens = 0;
-    let linesFiltradas = 0;
+            let totalItens = 0;
+            let linesFiltradas = 0;
 
-    dadosGlobaisDash.forEach(row => {
-        let dataFormata = new Date(row[0]).toLocaleString();
-        let setor = (row[1] || "").toUpperCase().trim();
-        let resp = (row[2] || "").toLowerCase().trim();
-        let codigo = (row[3] || "").toString().toLowerCase().trim();
-        let desc = (row[4] || "").toLowerCase().trim();
-        let lote = row[5] || "";
-        let um = row[6] || "";
-        let qtd = parseFloat(row[7]) || 0;
+            dadosGlobaisDash.forEach(row => {
+                let dataFormata = new Date(row[0]).toLocaleString();
+                let setor = (row[1] || "").toUpperCase().trim();
+                let resp = (row[2] || "").toLowerCase().trim();
+                let codigo = (row[3] || "").toString().toLowerCase().trim();
+                let desc = (row[4] || "").toLowerCase().trim();
+                let lote = row[5] || "";
+                let um = row[6] || "";
+                let qtd = parseFloat(row[7]) || 0;
 
-        let bateSetor = (fSetor === "TODOS" || setor === fSetor.toUpperCase().trim());
-        let bateBusca = (fBusca === "" || resp.includes(fBusca) || codigo.includes(fBusca) || desc.includes(fBusca));
+                let bateSetor = (fSetor === "TODOS" || setor === fSetor);
+                let bateBusca = (fBusca === "" || resp.includes(fBusca) || codigo.includes(fBusca) || desc.includes(fBusca));
+
+                if (bateSetor && bateBusca) {
+                    linesFiltradas++;
+                    totalItens += qtd;
 
                     tbody.innerHTML += `
                         <tr>
                             <td style="padding:6px;">${dataFormata}</td>
-                            <td>${setor}</td>
-                            <td>${resp}</td>
-                            <td>${codigo}</td>
-                            <td>${desc}</td>
+                            <td>${row[1] || ""}</td>
+                            <td>${row[2] || ""}</td>
+                            <td>${row[3] || ""}</td>
+                            <td>${row[4] || ""}</td>
                             <td>${lote}</td>
                             <td>${um}</td>
                             <td>${qtd}</td>
@@ -740,7 +744,6 @@
             setInterval(() => { document.getElementById('data-hora').innerText = new Date().toLocaleString(); }, 1000);
         };
 
-        // REGISTRO DO APLICATIVO (PWA) EM SEGUNDO PLANO
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
