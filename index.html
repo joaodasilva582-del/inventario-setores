@@ -423,6 +423,7 @@
                 const cis = document.getElementById('corpo-insumos-sleeve'); cis.innerHTML = "";
                 insumosDecoracaoSleeve.forEach((it, i) => {
                     let tr = document.createElement('tr');
+                    let temCalculadora = it.calc ? true : false;
                     tr.innerHTML = `
                         <td><input class="cell-input cell-readonly text-center" value="**********" readonly tabindex="-1"></td>
                         <td><input class="cell-input cell-readonly text-center" id="slvins-mat-${i}" value="${it.id}" readonly tabindex="-1"></td>
