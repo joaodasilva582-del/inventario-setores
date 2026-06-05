@@ -299,8 +299,7 @@
 
         const insumosDecoracaoSleeve = [
             {id:'0040033', um:'RL', ds:'FITA ADESIVA DE PAPEL CREPADO 68X50', calc:'Fita'},
-            {id:'0040026', um:'UN', ds:'LAMINA COSM. 68 X 40 X 0,03 CM', calc:'Lamina Fina'},
-            {id:'0030069', um:'UN', ds:'CHAPA DE PAPELAO 1200 X 1000', calc: false}
+            {id:'0040026', um:'UN', ds:'LAMINA COSM. 68 X 40 X 0,03 CM', calc:'Lamina Fina'}
         ];
 
         const insumosDinamoGeral = [
@@ -423,7 +422,6 @@
                 const cis = document.getElementById('corpo-insumos-sleeve'); cis.innerHTML = "";
                 insumosDecoracaoSleeve.forEach((it, i) => {
                     let tr = document.createElement('tr');
-                    let temCalculadora = it.calc ? true : false;
                     tr.innerHTML = `
                         <td><input class="cell-input cell-readonly text-center" value="**********" readonly tabindex="-1"></td>
                         <td><input class="cell-input cell-readonly text-center" id="slvins-mat-${i}" value="${it.id}" readonly tabindex="-1"></td>
