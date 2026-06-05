@@ -21,8 +21,8 @@
         table { border-collapse: collapse; width: 100%; margin-bottom: 15px; }
         .header-table td { padding: 5px 10px; border: 1px solid #000; font-weight: bold; }
         .title-box { background: var(--gray-header); font-size: 18px; text-align: center; }
-        .instr-box { background: var(--gray-header); text-align: center; font-size: 16px; font-weight: bold; padding: 8px; border: 1px solid #000 !important; }
-        .section-title { background: var(--gray-header); border: 1px solid #000 !important; text-align: center; font-weight: bold; padding: 8px 0; font-size: 16px; text-transform: uppercase; }
+        .instr-box { background: var(--gray-header); text-align: center; font-size: 24px; font-weight: 900; padding: 12px; border: 1px solid #000 !important; text-transform: uppercase; }
+        .section-title { background: var(--gray-header); border: 1px solid #000 !important; text-align: center; font-weight: 900; padding: 10px 0; font-size: 22px; text-transform: uppercase; }
         
         .main-table th { color: white; padding: 8px 5px; font-size: 14px; text-transform: uppercase; border: 1px solid #000; }
         .th-red { background: red !important; }
@@ -299,7 +299,8 @@
 
         const insumosDecoracaoSleeve = [
             {id:'0040033', um:'RL', ds:'FITA ADESIVA DE PAPEL CREPADO 68X50', calc:'Fita'},
-            {id:'0040026', um:'UN', ds:'LAMINA COSM. 68 X 40 X 0,03 CM', calc:'Lamina Fina'}
+            {id:'0040026', um:'UN', ds:'LAMINA COSM. 68 X 40 X 0,03 CM', calc:'Lamina Fina'},
+            {id:'0030069', um:'UN', ds:'CHAPA DE PAPELAO 1200 X 1000'} // Sem propriedade calc = Sem calculadora!
         ];
 
         const insumosDinamoGeral = [
@@ -422,6 +423,7 @@
                 const cis = document.getElementById('corpo-insumos-sleeve'); cis.innerHTML = "";
                 insumosDecoracaoSleeve.forEach((it, i) => {
                     let tr = document.createElement('tr');
+                    let temCalculadora = it.calc ? true : false; // Bloqueia o botão se calc for indefinido
                     tr.innerHTML = `
                         <td><input class="cell-input cell-readonly text-center" value="**********" readonly tabindex="-1"></td>
                         <td><input class="cell-input cell-readonly text-center" id="slvins-mat-${i}" value="${it.id}" readonly tabindex="-1"></td>
@@ -429,8 +431,8 @@
                         <td><input class="cell-input cell-readonly text-center" id="slvins-lote-${i}" value="******" readonly tabindex="-1"></td>
                         <td><input class="cell-input cell-readonly text-center" id="slvins-um-${i}" value="${it.um}" readonly tabindex="-1"></td>
                         <td>
-                            <input class="cell-input" type="number" id="slvins-qtd-${i}" placeholder="calculadora..." onkeydown="handleEnter(event, 'slvins', ${i})">
-                            <button class="btn-calc" onclick="abrirCalc(${i},'${it.calc}','slvins')">🧮</button>
+                            <input class="cell-input" type="number" id="slvins-qtd-${i}" placeholder="${temCalculadora ? 'calculadora...' : ''}" onkeydown="handleEnter(event, 'slvins', ${i})">
+                            ${temCalculadora ? `<button class="btn-calc" onclick="abrirCalc(${i},'${it.calc}','slvins')">🧮</button>` : ''}
                         </td>
                     `;
                     cis.appendChild(tr);
