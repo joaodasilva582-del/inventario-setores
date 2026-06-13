@@ -1,4 +1,4 @@
-const CACHE_NAME = 'spiltag-inventario-v10';
+const CACHE_NAME = 'spiltag-inventario-v11'; // Atualizado para v11 para forçar o reset
 const assets = [
   './',
   './index.html',
@@ -12,11 +12,11 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(assets);
-    })
+    }).then(() => self.skipWaiting()) // Força o SW novo a virar ativo na hora
   );
 });
 
-// Ativa o Service Worker
+// Ativa o Service Worker e limpa caches antigos
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys => {
@@ -27,18 +27,28 @@ self.addEventListener('activate', e => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim()) // Assume o controle das páginas imediatamente
   );
 });
 
-// Gerencia as requisições (permite o app carregar rápido)
+// Gerencia as requisições de forma inteligente (Blindado contra queda de rede)
 self.addEventListener('fetch', e => {
-  // Ignora requisições de POST (envio de dados para o Apps Script não passa pelo cache)
+  // Ignora requisições de POST (envio de dados para o Apps Script/nuvem)
   if (e.request.method === 'POST') return;
 
   e.respondWith(
-    caches.match(e.request).then(cachedResponse => {
-      return cachedResponse || fetch(e.request);
+    // Tenta puxar a requisição direto da rede primeiro
+    fetch(e.request).catch(() => {
+      // Se a rede falhar (fábrica sem internet), busca IMEDIATAMENTE no cache local
+      return caches.match(e.request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        // Se nem no cache existir (uma imagem externa por exemplo), retorna página em branco mas não trava o app
+        if (e.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
+      });
     })
   );
 });
